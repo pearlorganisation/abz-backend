@@ -23,9 +23,15 @@ const userSchema = new mongoose.Schema(
     },
     user_name: {
       type: String,
-      required: true,
+      required: [true, "Username is required"],
       unique: true,
       trim: true,
+      minlength: [3, "Username must be at least 3 characters"],
+      maxlength: [30, "Username must be at most 30 characters"],
+      match: [
+        /^(?!.*[.-]{2})(?!.*[.-]$)[a-zA-Z0-9][a-zA-Z0-9._-]{2,29}$/,
+        "Username must start with a letter or number, can include '.', '-', '_' (no consecutive dots or hyphens, and can't end with them)",
+      ],
     },
     profile_picture: {
       type: String,
