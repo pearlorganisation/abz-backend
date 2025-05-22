@@ -12,3 +12,6 @@ export const USER_ROLES_ENUM = {
   RESEARCHER: "RESEARCHER",
   TREASURER: "TREASURER",
 };
+
+export const MAX_LOGIN_ATTEMPTS = 50; // set to 5 for production
+export const LOCK_TIME = 1000; //2 * 60 * 60 * 1000; set  2 hours  for production

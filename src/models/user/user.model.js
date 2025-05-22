@@ -111,6 +111,16 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    login_history: {
+      type: [
+        {
+          ip: String,
+          userAgent: String,
+          timestamp: { type: Date, default: Date.now },
+        },
+      ],
+      default: [],
+    },
     oidc_provider: {
       type: String,
       default: null,
@@ -127,7 +137,10 @@ const userSchema = new mongoose.Schema(
       enum: ["PASSWORD", "OIDC"],
       default: "PASSWORD",
     },
-
+    lock_until: {
+      type: Date,
+      default: null,
+    },
     refresh_token: { type: String },
   },
   { timestamps: true }

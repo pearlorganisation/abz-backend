@@ -1,3 +1,8 @@
+import {
+  COOKIE_OPTIONS,
+  LOCK_TIME,
+  MAX_LOGIN_ATTEMPTS,
+} from "../../../constants.js";
 import Company from "../../models/company/company.js";
 import Researcher from "../../models/researcher/researcher.model.js";
 import User from "../../models/user/user.model.js";
@@ -126,11 +131,68 @@ export const login = asyncHandler(async (req, res, next) => {
     );
   }
 
+  // Check user account status
+  if (existingUser.status === "SUSPENDED") {
+    return next(
+      new ApiError("Your account has been suspended. Contact support.", 403)
+    );
+  }
+
+  if (existingUser.status === "BANNED") {
+    return next(new ApiError("Your account has been banned.", 403));
+  }
+  if (existingUser.lock_until && existingUser.lock_until > new Date()) {
+    return next(
+      new ApiError(
+        `Too many failed login attempts. Account locked until ${existingUser.lock_until.toLocaleString()}`,
+        403
+      )
+    );
+  }
+
   const isValidPassword = await existingUser.isPasswordCorrect(password);
 
   if (!isValidPassword) {
+    // Increment login attempts
+    existingUser.login_attempts = (existingUser.login_attempts || 0) + 1;
+    console.log("login_attempts", existingUser.login_attempts);
+    if (existingUser.login_attempts >= MAX_LOGIN_ATTEMPTS) {
+      existingUser.lock_until = new Date(Date.now() + LOCK_TIME);
+    }
+    await existingUser.save();
     return next(new ApiError("Wrong password", 400));
   }
+  // Extract IP and User-Agent
+  const ipAddress =
+    req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+  const userAgent = req.headers["user-agent"];
+
+  // Track login device/IP info
+  existingUser.login_history.push({
+    ip: ipAddress,
+    userAgent,
+    timestamp: new Date(),
+  });
+
+  // Limit login history entries (keep last 10)
+  if (existingUser.login_history.length > 10) {
+    existingUser.login_history = existingUser.login_history.slice(-10);
+  }
+
+  // Optional alert for new device or IP
+  const knownDevice = existingUser.login_history.some(
+    (entry) => entry.ip === ipAddress && entry.userAgent === userAgent
+  );
+
+  if (!knownDevice) {
+    // You can send an alert email or log the new device login
+    console.log("New device or IP detected.");
+  }
+
+  // Reset login attempts and update last login timestamp
+  existingUser.login_attempts = 0;
+  existingUser.last_login_at = new Date();
+  await existingUser.save();
 
   const access_token = existingUser.generateAccessToken();
   const refresh_token = existingUser.generateRefreshToken();
@@ -158,5 +220,8 @@ export const login = asyncHandler(async (req, res, next) => {
       user: sanitizedUser,
     });
 });
+// Log IPs of repeated failed attempts (block suspicious IPs)
+// Email the user when account is locked
+// Allow manual unlock via admin panel or email verification
 
 export const logout = asyncHandler(async (req, res, next) => {});
