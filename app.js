@@ -27,8 +27,16 @@ app.use(passport.session());
 
 app.use(
   cors({
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin:
+      process.env.NODE_ENV === "development"
+        ? [
+            "http://localhost:3000",
+            "http://localhost:3002",
+            "http://localhost:3001",
+          ]
+        : ["https://abz-frontend-one.vercel.app"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"], // Specify allowed HTTP methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Specify allowed headers
     credentials: true,
   })
 );
