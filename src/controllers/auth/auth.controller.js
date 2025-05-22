@@ -93,7 +93,7 @@ export const verifySignUpToken = asyncHandler(async (req, res, next) => {
     return next(new ApiError("Email is not verified or Invalid token", 400));
   }
 
-  const existingUser = await User.findById(decodedToken._id);
+  const existingUser = await User.findById({ email: decodedToken.email });
   if (!existingUser) {
     return next(new ApiError("User not found", 404));
   }
