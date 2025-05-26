@@ -128,7 +128,6 @@ const userSchema = new mongoose.Schema(
       // unique field for OIDC users
       type: String,
       unique: true, // Only OIDC users will have this filled
-      sparse: true, // Ensures MongoDB doesn't complain when it's null for password users
     },
     login_type: {
       type: String,
