@@ -117,11 +117,21 @@ export const verifySignUpToken = asyncHandler(async (req, res, next) => {
 });
 
 export const login = asyncHandler(async (req, res, next) => {
-  const { email, password } = req?.body;
-  if (!email || !password) {
-    return next(new ApiError("All fields are required", 400));
+  const { email, user_name, password, identifier_type } = req.body;
+  if (!password || (!email && !user_name)) {
+    return next(
+      new ApiError("Email or username and password are required", 400)
+    );
   }
-  const existingUser = await User.findOne({ email });
+  let existingUser;
+
+  if (identifier_type === "EMAIL") {
+    existingUser = await User.findOne({ email: email.toLowerCase() });
+  } else if (identifier_type === "USERNAME") {
+    existingUser = await User.findOne({ user_name });
+  } else {
+    return next(new ApiError("Invalid identifier type", 400));
+  }
   if (!existingUser) return next(new ApiError("User not found", 400));
 
   // Check if the user is verified (if necessary)

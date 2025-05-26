@@ -20,6 +20,7 @@ const companySchema = new mongoose.Schema(
       type: String,
       unique: true,
       trim: true,
+      sparse: true,
     },
     industry: {
       type: String,
