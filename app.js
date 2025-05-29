@@ -47,6 +47,7 @@ app.use(morgan("dev"));
 
 //Routes Imports
 import authRouter from "./src/routes/auth.routes.js";
+import configRouter from "./src/routes/config/config.routes.js";
 import { errorHandler } from "./src/utils/error/errorHanlder.js";
 
 app.get("/", (req, res) => {
@@ -55,6 +56,7 @@ app.get("/", (req, res) => {
 
 // Routes
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/config", configRouter);
 
 app.use(errorHandler);
 
