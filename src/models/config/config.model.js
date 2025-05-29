@@ -4,9 +4,10 @@ const configSchema = new mongoose.Schema(
   {
     key: {
       type: String,
-      required: true,
-      unique: true,
-      enum: ["asset_types", "asset_labels"], // can add dynamically to
+      required: [true, "Config key is required"],
+      trim: true,
+      unique: [true, "Config key must be unique"],
+      enum: ["asset_types", "asset_labels",], // can add dynamically to
     },
     values: {
       type: [String],
