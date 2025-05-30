@@ -14,7 +14,7 @@ export const createPartner = asyncHandler(async (req, res, next) => {
     imageResponse = await uploadFileToCloudinary(image, "Partner");
   }
 
-  console.log("this is my response ",imageResponse)
+  console.log("this is my response ", imageResponse);
   const partner = await Partner.create({
     ...req.body,
     image: (imageResponse && imageResponse[0]) || null,
