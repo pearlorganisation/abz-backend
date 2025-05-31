@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { PROGRAM_TYPES } from "../../../constants";
 
 const { Schema, model } = mongoose;
 
@@ -19,12 +20,17 @@ const programSchema = new Schema(
     },
     visibility: {
       type: String,
-      enum: ["public", "invite-only"],
-      default: "public",
+      enum: ["PUBLIC", "INVITE_ONLY"], //invite_only is used for private programs
+      default: "PUBLIC",
     },
-    disclosurePolicy: {
+    disclosure_policy: {
       type: String,
-      enum: ["public", "coordinated", "confidential"],
+      enum: ["PUBLIC", "COORDINATED", "CONFEDENTIAL"],
+    },
+    program_type: {
+      type: String,
+      enum: PROGRAM_TYPES,
+      required: true,
     },
     scopes: {
       in: [
@@ -38,7 +44,7 @@ const programSchema = new Schema(
         },
       ],
     },
-    rewardTiers: {
+    reward_tiers: {
       low: {
         type: Number,
       },
@@ -54,15 +60,15 @@ const programSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ["draft", "active", "archived"],
-      default: "draft",
+      enum: ["DRAFT", "ACTIVE", "ARCHIVED"],
+      default: "DRAFT",
     },
     attachments: [
       {
         type: String, // URLs to media or documents
       },
     ],
-    invitedResearchers: [
+    invited_researchers: [
       {
         type: Schema.Types.ObjectId,
         ref: "User",
