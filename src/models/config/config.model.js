@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { CONFIG_KEYS } from "../../../constants.js";
 
 const configSchema = new mongoose.Schema(
   {
@@ -7,7 +8,7 @@ const configSchema = new mongoose.Schema(
       required: [true, "Config key is required"],
       trim: true,
       unique: [true, "Config key must be unique"],
-      enum: ["asset_types", "asset_labels",], // can add dynamically to
+      enum: CONFIG_KEYS, // can add dynamically to
     },
     values: {
       type: [String],

@@ -128,7 +128,7 @@ export const login = asyncHandler(async (req, res, next) => {
   if (identifier_type === "EMAIL") {
     existingUser = await User.findOne({ email: email.toLowerCase() });
   } else if (identifier_type === "USERNAME") {
-    existingUser = await User.findOne({ user_name });
+    existingUser = await User.findOne({ user_name: user_name.toLowerCase() });
   } else {
     return next(new ApiError("Invalid identifier type", 400));
   }

@@ -51,6 +51,7 @@ import partnerRouter from "./src/routes/partners/partner.routes.js";
 import testmonialsRouter from "./src/routes/testimonials/testimonials.routes.js";
 import configRouter from "./src/routes/config/config.routes.js";
 import assetRouter from "./src/routes/asset/asset.routes.js";
+import programRouter from "./src/routes/programs/programs.routes.js";
 import { errorHandler } from "./src/utils/error/errorHanlder.js";
 
 app.get("/", (req, res) => {
@@ -63,6 +64,7 @@ app.use("/api/v1/partners", partnerRouter);
 app.use("/api/v1/testmonials", testmonialsRouter);
 app.use("/api/v1/configs", configRouter);
 app.use("/api/v1/assets", assetRouter);
+app.use("/api/v1/programs", programRouter);
 
 app.use(errorHandler);
 

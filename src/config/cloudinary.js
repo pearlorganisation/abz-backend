@@ -73,7 +73,6 @@ export const deleteFileFromCloudinary = async (files) => {
       };
     }
 
-    
     return { success: true, result: deleteResults };
   } catch (error) {
     console.error("Error during Cloudinary deletion process:", error);

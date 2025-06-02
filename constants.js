@@ -23,3 +23,12 @@ export const PROGRAM_TYPES = [
   "PRIVATE",
   "COMPETITION",
 ];
+
+export const CONFIG_KEYS = [
+  "asset_types",
+  "asset_labels",
+  "group_labels",
+  "researcher_activities",
+  "asset_environments",
+  "language_frameworks",
+];
