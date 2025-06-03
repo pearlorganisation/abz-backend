@@ -61,7 +61,7 @@ export const deleteFileFromCloudinary = async (files) => {
         }
       })
     );
-    console.log("Deleted Result: ", deleteResults);
+
     // Check if there were any errors
     const failedDeletes = deleteResults.filter((res) => res.error); // response when deletion failed = {"result": "", "error": {}}
     if (failedDeletes.length > 0) {

@@ -234,4 +234,26 @@ export const login = asyncHandler(async (req, res, next) => {
 // Email the user when account is locked
 // Allow manual unlock via admin panel or email verification
 
-export const logout = asyncHandler(async (req, res, next) => {});
+export const logout = asyncHandler(async (req, res, next) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { $unset: { refresh_token: 1 } },
+      { new: true }
+    );
+
+    // Check if user was found
+    if (!user) {
+      return next(new ApiError("User not found", 404)); // Return 404 if no user found
+    }
+
+    res
+      .clearCookie("access_token")
+      .clearCookie("refresh_token")
+      .status(200)
+      .json({ success: true, message: "Logout successfully!" });
+  } catch (error) {
+    console.log(`Error in logout: ${error.message}`);
+    return next(new ApiError(`Error in logout: ${error.message}`, 500));
+  }
+});
