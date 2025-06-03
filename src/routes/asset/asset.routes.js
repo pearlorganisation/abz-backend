@@ -10,4 +10,5 @@ const router = express.Router();
 
 router.route("/").post(createAsset).get(getAllAssets);
 router.route("/:id").patch(updateAssetById).delete(deleteAssetById);
+
 export default router;
